@@ -15,3 +15,7 @@
 - vscode debugger, same as chrome
 
 6. DNS check, TCP 3 shaking, send http request, get response, TCP 3 wavings
+
+7. Control - handle data
+
+8. Model - define data format

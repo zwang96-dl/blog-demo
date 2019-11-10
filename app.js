@@ -1,27 +1,61 @@
+const querystring = require('querystring');
+
 const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
+
+
+const getPostData = (req) => {
+    return new Promise((resolve, reject) => {
+        if (req.method !== 'POST') { 
+            resolve({});
+            return;
+        }
+        if (req.headers['content-type'] !== 'application/json') {
+            resolve({});
+            return;
+        }
+
+        let postData = '';
+        req.on('data', chunk => {
+            postData += chunk.toString();
+        });
+        req.on('end', chunk => {
+            if (!postData) {
+                resolve({});
+                return
+            }
+            resolve(JSON.parse(postData));
+        });
+    });
+};
 
 const serverHandle = (req, res) => {
     res.setHeader('content-type', 'application/json');
     const url = req.url;
     req.path = url.split('?')[0];
-    const blogData = handleBlogRouter(req, res);
+    req.query = querystring.parse(url.split('?')[1]);
 
-    if (blogData) {
-        res.end(JSON.stringify(blogData));
-        return;
-    }
+    getPostData(req).then(postData => {
+        req.body = postData;
 
-    const userData = handleUserRouter(req, res);
+        const blogData = handleBlogRouter(req, res);
 
-    if (userData) {
-        res.end(JSON.stringify(userData));
-        return;
-    }
-
-    res.writeHead(404, { 'content-type': 'test/plain' });
-    res.write('Sorry 404 Not Found\n');
-    res.end();
+        if (blogData) {
+            res.end(JSON.stringify(blogData));
+            return;
+        }
+    
+        const userData = handleUserRouter(req, res);
+    
+        if (userData) {
+            res.end(JSON.stringify(userData));
+            return;
+        }
+    
+        res.writeHead(404, { 'content-type': 'test/plain' });
+        res.write('Sorry 404 Not Found\n');
+        res.end();
+    });
 };
 
 module.exports = serverHandle;
