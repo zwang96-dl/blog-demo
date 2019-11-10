@@ -26,6 +26,50 @@ docker run \
     --name blog-demo-mysql \
     -v <YOUR_DIR>/blog_demo_dev_db:/var/lib/mysql \
     -p 3306:3306 \
-    -e MYSQL_ROOT_PASSWORD=<YOUR_ROOT_PASSWORD> \
+    -e MYSQL_ROOT_PASSWORD=123456 \
     -d mysql
+
+mysql -u root --password=123456 -h 127.0.0.1
+```
+
+10. Create database and tables
+```
+CREATE SCHEMA myblog;
+SHOW DATABASES;
+USE myblog;
+
+CREATE TABLE `myblog`.`users` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(20) NOT NULL,
+    `password` VARCHAR(20) NOT NULL,
+    `realname` VARCHAR(10) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `myblog`.`blogs` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(50) NOT NULL,
+    `content` LONGTEXT NOT NULL,
+    `createtime` BIGINT(20) NOT NULL DEFAULT 0,
+    `author` VARCHAR(20) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+SHOW TABLES;
+```
+
+11. CRUD
+```
+INSERT INTO users (username, `password`, realname) VALUES ('zhangsan', '123', 'Zhang San');
+INSERT INTO users (username, `password`, realname) VALUES ('lisi', '123', 'Li Si');
+
+SELECT * FROM users;
+
+SET SQL_SAFE_UPDATES=0;
+UPDATE users SET realname='Li Si 2' WHERE username='lisi'; // MUST USE WHERE
+
+DELETE FROM users WHERE username='lisi'; // MUST USE WHERE
+
+ALTER TABLE myblog.users ADD COLUMN `state` INT NOT NULL DEFAULT 1 AFTER `realname`;
+UPDATE users SET state=0 WHERE username='lisi'; // To replace delete (soft delete)
 ```
