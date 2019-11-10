@@ -4,7 +4,8 @@
   "description": "Blog demo",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cross-env NODE_ENV=dev nodemon ./bin/www.js",
+    "production": "cross-env NODE_ENV=production nodemon ./bin/www.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/nicemayi/blog-demo/issues"
   },
-  "homepage": "https://github.com/nicemayi/blog-demo#readme"
+  "homepage": "https://github.com/nicemayi/blog-demo#readme",
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "nodemon": "^1.19.4"
+  }
 }
