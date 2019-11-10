@@ -19,3 +19,13 @@
 7. Control - handle data
 
 8. Model - define data format
+
+9. setup mysql on dev environment
+```
+docker run \
+    --name blog-demo-mysql \
+    -v <YOUR_DIR>/blog_demo_dev_db:/var/lib/mysql \
+    -p 3306:3306 \
+    -e MYSQL_ROOT_PASSWORD=<YOUR_ROOT_PASSWORD> \
+    -d mysql
+```
