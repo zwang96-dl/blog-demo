@@ -72,4 +72,17 @@ DELETE FROM users WHERE username='lisi'; // MUST USE WHERE
 
 ALTER TABLE myblog.users ADD COLUMN `state` INT NOT NULL DEFAULT 1 AFTER `realname`;
 UPDATE users SET state=0 WHERE username='lisi'; // To replace delete (soft delete)
+
+ALTER TABLE myblog.users DROP COLUMN `state`;
+
+INSERT INTO blogs (title, content, createtime, author) VALUES ('title A', 'content A', 1573379392573, 'zhangsan');
+
+INSERT INTO blogs (title, content, createtime, author) VALUES ('title B', 'content B', 1573379392573, 'lisi');
+```
+
+12. 
+For "Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server;", try:
+```
+ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY '123456';
+flush privileges;
 ```
