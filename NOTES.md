@@ -86,3 +86,28 @@ For "Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication p
 ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY '123456';
 flush privileges;
 ```
+
+13. `document.cookie` check cookie
+
+14. Update cookie
+```
+document.cookie = 'k1=100;';
+document.cookie = 'k1=200;';
+.
+.
+.
+```
+
+15. Server update cookie: `res.setHeader('Set-Cookie', `username=${data.username}; path=/; httpOnly`);`
+
+16. Basic process:
+- Send username, password from FE to BE
+- BE auth, if true set cookie to frontend
+- From now on, every req from FE will be with valid cookie
+
+17. `httpOnly` so only server can change cookie
+
+18. cookie is dangergous
+
+19. cookie saves userid, server can check username
+
