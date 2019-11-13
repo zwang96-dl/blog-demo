@@ -1,11 +1,9 @@
 const querystring = require('querystring');
 
 const handleBlogRouter = require('./src/router/blog');
+const { setCache, getCache } = require('./src/db/redis');
 const { handleUserRouter, getCookieExpires } = require('./src/router/user');
 
-
-// session data
-const SESSION_DATA = {};
 
 const getPostData = (req) => {
     return new Promise((resolve, reject) => {
@@ -51,31 +49,54 @@ const serverHandle = (req, res) => {
     });
 
     // parse session
+    // let needSetCookie = false;
+    // let userId = req.cookie.userid;
+    // if (userId) {
+    //     if (!SESSION_DATA[userId]) { // undefined
+    //         SESSION_DATA[userId] = {};
+    //     }
+    // } else {
+    //     needSetCookie = true;
+    //     userId = `${Date.now()}_${Math.random()}`;
+    //     SESSION_DATA[userId] = {};
+    // }
+    // req.session = SESSION_DATA[userId];
+
+    // parse session from redis
     let needSetCookie = false;
     let userId = req.cookie.userid;
-    if (userId) {
-        if (!SESSION_DATA[userId]) { // undefined
-            SESSION_DATA[userId] = {};
-        }
-    } else {
+    if (!userId) {
         needSetCookie = true;
         userId = `${Date.now()}_${Math.random()}`;
-        SESSION_DATA[userId] = {};
+        // initialize redis's session value
+        setCache(userId, {});
     }
-    req.session = SESSION_DATA[userId];
 
+    // get session
+    req.sessionId = userId;
+    getCache(req.sessionId)
+        .then(sessionData => {
+            if (sessionData == null) {
+                setCache(req.sessionId, {});
+                req.session = {};
+            } else {
+                req.session = sessionData;
+            }
+            console.log('req.session', req.session);
 
-    getPostData(req).then(postData => {
-        req.body = postData;
+            return getPostData(req);
+        })
+        .then(postData => {
+            req.body = postData;
 
-        const blogResult = handleBlogRouter(req, res);
-        if (blogResult) {
-            blogResult.then(blogData => {
-                res.end(
-                    JSON.stringify(blogData),
-                )
-            }); 
-            return;
+            const blogResult = handleBlogRouter(req, res);
+            if (blogResult) {
+                blogResult.then(blogData => {
+                    res.end(
+                        JSON.stringify(blogData),
+                    )
+                }); 
+                return;
         }
 
         const userResult = handleUserRouter(req, res);

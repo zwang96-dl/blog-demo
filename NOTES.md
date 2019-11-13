@@ -29,6 +29,8 @@ docker run \
     -e MYSQL_ROOT_PASSWORD=123456 \
     -d mysql
 
+docker start blog-demo-mysql
+
 mysql -u root --password=123456 -h 127.0.0.1
 ```
 
@@ -111,3 +113,17 @@ document.cookie = 'k1=200;';
 
 19. cookie saves userid, server can check username
 
+20. Create redis
+```
+docker run --name blog-demo-redis -p 6379:6379 -v <YOUR_DIR>/blog_demo_dev_cache:/data -d redis
+
+docker start blog-demo-redis # next time
+
+redis-cli
+```
+
+21. client can't see -> reverse proxy, nginx
+
+22. Docker install ngxin (Mac has some issues, directly use nginx instead)
+
+23. 
