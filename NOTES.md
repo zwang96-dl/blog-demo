@@ -126,4 +126,20 @@ redis-cli
 
 22. Docker install ngxin (Mac has some issues, directly use nginx instead)
 
-23. 
+23. Access log
+
+24. Customize log
+
+25. Use writeStream (singleton) to write logs
+
+26. Linux crontab split logs
+
+27. * * * * * + cmd 
+
+28. crontab -e # open editor
+
+39. * 0 * * * your_script.sh -> run the script every day at 00:00
+
+40. crontab -l
+
+41. ndoejs -> readline based on stream
