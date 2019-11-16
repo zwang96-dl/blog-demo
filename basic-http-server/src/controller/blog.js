@@ -1,4 +1,5 @@
 const { exec } = require('../db/mysql');
+const { xss } = require('xss');
 
 const getList = (author, keyword) => {
 
@@ -22,10 +23,9 @@ const getDetail = (id) => {
 const newBlog = (blogData = {}) => {
     const { title, content, author } = blogData;
     const createTime = Date.now();
-
     const sql = `
         INSERT INTO blogs (title, content, createtime, author)
-        VALUES ('${title}', '${content}', ${createTime}, '${author}');
+        VALUES ('${xss(title)}', '${content}', ${createTime}, '${author}');
     `;
 
     return exec(sql).then(insertData => {

@@ -143,3 +143,13 @@ redis-cli
 40. crontab -l
 
 41. ndoejs -> readline based on stream
+
+42. sql ingestion
+
+43. XSS attack: User upload html snippet, with js script which can get user cookies
+
+44. `alter table `myblog`.`users` change column `password` `password` varchar(32) not null;`
+
+45. `UPDATE users SET password='a9085111aeed613f1896030acaaa2f78' WHERE username='zhangsan';`
+
+46. 
