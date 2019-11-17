@@ -152,4 +152,36 @@ redis-cli
 
 45. `UPDATE users SET password='a9085111aeed613f1896030acaaa2f78' WHERE username='zhangsan';`
 
-46. 
+46. setup local mongodb
+```
+docker run \
+    --name mongodb_demo \
+    -p 27017:27017 \
+    -v /Users/zhewang/Documents/mongodb_data:/data/db \
+    -d mongo
+```
+
+```
+sudo vim /etc/mongod.conf
+
+# network interfaces
+net:
+  port: 27017
+#  bindIp: 127.0.0.1  <- comment out this line
+
+security:
+  authorization: 'enabled'
+```
+
+```
+use cool_db
+
+db.createUser({
+    user: 'ian',
+    pwd: 'secretPassword',
+    roles: [{ role: 'readWrite', db:'cool_db'}]
+})
+```
+
+47. 
+
